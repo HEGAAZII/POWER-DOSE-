@@ -1,8 +1,18 @@
-import { Product, Testimonial, Review } from './types';
+import { Brand, Product, Testimonial, Review } from './types';
+
+export const BRANDS: Brand[] = [
+  { id: 'iron-core', name: 'Iron Core Labs', shortName: 'IRON CORE', tagline: 'Elite Performance Gear' },
+  { id: 'titan-labs', name: 'Titan Labs', shortName: 'TITAN', tagline: 'Built For Mass' },
+  { id: 'apex-pharma', name: 'Apex Pharma', shortName: 'APEX', tagline: 'Pharma Grade Only' },
+  { id: 'nova-nutrition', name: 'Nova Nutrition', shortName: 'NOVA', tagline: 'Clean Protein Science' },
+  { id: 'volt-labs', name: 'Volt Labs', shortName: 'VOLT', tagline: 'Energy & Focus' },
+  { id: 'hydra-supply', name: 'Hydra Supply', shortName: 'HYDRA', tagline: 'Recovery Specialists' },
+];
 
 export const PRODUCTS: Product[] = [
   {
     id: '1',
+    brand: 'iron-core',
     name: 'TESTO-CORE 500',
     category: 'steroids',
     price: 89.99,
@@ -18,6 +28,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '2',
+    brand: 'volt-labs',
     name: 'SHRED-X FAT BURNER',
     category: 'fat-burners',
     price: 49.99,
@@ -33,6 +44,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '3',
+    brand: 'nova-nutrition',
     name: 'WHEY-ISO PRO 2KG',
     category: 'protein',
     price: 59.99,
@@ -48,6 +60,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '4',
+    brand: 'titan-labs',
     name: 'ANABOL-MAX 50',
     category: 'steroids',
     price: 74.99,
@@ -63,6 +76,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '5',
+    brand: 'apex-pharma',
     name: 'TRENBOL-ELITE',
     category: 'steroids',
     price: 119.99,
@@ -78,6 +92,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '6',
+    brand: 'hydra-supply',
     name: 'CASEIN NIGHT-REPAIR',
     category: 'protein',
     price: 54.99,

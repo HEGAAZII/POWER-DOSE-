@@ -1,6 +1,17 @@
+export interface Brand {
+  id: string;
+  name: string;
+  /** Short wordmark shown inside the round logo badge. */
+  shortName: string;
+  tagline: string;
+  /** Optional logo image. Falls back to the wordmark when missing. */
+  logo?: string;
+}
+
 export interface Product {
   id: string;
   name: string;
+  brand: string;
   category: 'steroids' | 'protein' | 'fat-burners';
   price: number;
   originalPrice?: number;

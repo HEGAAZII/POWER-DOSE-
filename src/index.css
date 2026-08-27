@@ -66,3 +66,13 @@ h1, h2, h3, h4, .heading {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-neon-green);
 }
+
+/* Brand rails: horizontal scroll without a visible scrollbar */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

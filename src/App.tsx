@@ -25,8 +25,8 @@ import {
   CreditCard
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Product, CartItem, Testimonial } from './types';
-import { PRODUCTS, TESTIMONIALS, FAQ } from './constants';
+import { Brand, Product, CartItem, Testimonial } from './types';
+import { BRANDS, PRODUCTS, TESTIMONIALS, FAQ } from './constants';
 
 // --- Components ---
 
@@ -53,6 +53,7 @@ const Navbar = ({ cartCount, onOpenCart, onNavigate }: { cartCount: number, onOp
         <div className="hidden md:flex items-center gap-8 text-sm font-semibold uppercase tracking-widest">
           <button onClick={() => onNavigate('home')} className="hover:text-neon-green transition-colors">Home</button>
           <button onClick={() => onNavigate('shop')} className="hover:text-neon-green transition-colors">Shop All</button>
+          <button onClick={() => onNavigate('brands')} className="hover:text-neon-green transition-colors">Brands</button>
           <button onClick={() => onNavigate('category:steroids')} className="hover:text-neon-green transition-colors">Steroids</button>
           <button onClick={() => onNavigate('category:protein')} className="hover:text-neon-green transition-colors">Protein</button>
           <button onClick={() => onNavigate('category:fat-burners')} className="hover:text-neon-green transition-colors">Fat Burners</button>
@@ -89,6 +90,7 @@ const Navbar = ({ cartCount, onOpenCart, onNavigate }: { cartCount: number, onOp
             <div className="flex flex-col gap-8 text-3xl font-display uppercase">
               <button onClick={() => { onNavigate('home'); setIsMobileMenuOpen(false); }} className="text-left hover:text-neon-green transition-colors">Home</button>
               <button onClick={() => { onNavigate('shop'); setIsMobileMenuOpen(false); }} className="text-left hover:text-neon-green transition-colors">Shop All</button>
+              <button onClick={() => { onNavigate('brands'); setIsMobileMenuOpen(false); }} className="text-left hover:text-neon-green transition-colors">Brands</button>
               <button onClick={() => { onNavigate('category:steroids'); setIsMobileMenuOpen(false); }} className="text-left hover:text-neon-green transition-colors">Steroids</button>
               <button onClick={() => { onNavigate('category:protein'); setIsMobileMenuOpen(false); }} className="text-left hover:text-neon-green transition-colors">Protein</button>
               <button onClick={() => { onNavigate('category:fat-burners'); setIsMobileMenuOpen(false); }} className="text-left hover:text-neon-green transition-colors">Fat Burners</button>
@@ -319,6 +321,82 @@ const SocialProof = () => {
 
 // --- Pages ---
 
+const BrandBadge = ({ brand, size = 'sm', onNavigate }: {
+  brand: Brand,
+  size?: 'sm' | 'lg',
+  onNavigate: (id: string) => void,
+  key?: string
+}) => {
+  const dimensions = size === 'lg' ? 'w-28 h-28 md:w-32 md:h-32' : 'w-20 h-20 md:w-24 md:h-24';
+  const wordmark = size === 'lg' ? 'text-[13px] md:text-sm' : 'text-[10px] md:text-xs';
+
+  return (
+    <button
+      onClick={() => onNavigate(`brand:${brand.id}`)}
+      className="flex flex-col items-center gap-3 shrink-0 group"
+      aria-label={`Shop ${brand.name}`}
+    >
+      <motion.div
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.97 }}
+        className={`${dimensions} rounded-full bg-white flex items-center justify-center overflow-hidden border border-dark-border p-3 transition-shadow group-hover:shadow-[0_0_20px_rgba(57,255,20,0.35)]`}
+      >
+        {brand.logo ? (
+          <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+        ) : (
+          <span className={`font-display text-black leading-none tracking-tight text-center ${wordmark}`}>
+            {brand.shortName}
+          </span>
+        )}
+      </motion.div>
+      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-neon-green transition-colors">
+        {brand.name}
+      </span>
+    </button>
+  );
+};
+
+const BrandsStrip = ({ onNavigate }: { onNavigate: (id: string) => void }) => (
+  <section className="py-16 border-b border-dark-border">
+    <div className="max-w-7xl mx-auto px-4">
+      <div className="flex justify-between items-center mb-10">
+        <h2 className="text-4xl md:text-5xl font-display italic">All Brands</h2>
+        <button
+          onClick={() => onNavigate('brands')}
+          className="flex items-center gap-2 text-neon-green font-bold uppercase text-xs md:text-sm hover:gap-4 transition-all"
+        >
+          View All <ArrowRight size={16} />
+        </button>
+      </div>
+      <div className="flex gap-6 md:gap-10 overflow-x-auto pb-4 md:justify-center no-scrollbar">
+        {BRANDS.map(brand => (
+          <BrandBadge key={brand.id} brand={brand} onNavigate={onNavigate} />
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const BrandsPage = ({ onNavigate }: { onNavigate: (id: string) => void }) => (
+  <div className="pt-32 pb-24 max-w-7xl mx-auto px-4">
+    <div className="mb-12">
+      <h1 className="text-6xl font-display italic mb-4">All Brands</h1>
+      <p className="text-gray-400 uppercase text-xs font-bold tracking-[0.2em]">Only certified labs. Zero fakes.</p>
+    </div>
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+      {BRANDS.map(brand => (
+        <div key={brand.id} className="bg-dark-surface border border-dark-border rounded-3xl p-6 flex flex-col items-center text-center gap-3">
+          <BrandBadge brand={brand} size="lg" onNavigate={onNavigate} />
+          <p className="text-[11px] text-gray-500 uppercase font-bold tracking-widest">{brand.tagline}</p>
+          <span className="text-[10px] text-gray-600 uppercase font-bold tracking-widest">
+            {PRODUCTS.filter(p => p.brand === brand.id).length === 1 ? '1 Product' : `${PRODUCTS.filter(p => p.brand === brand.id).length} Products`}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 const HomePage = ({ onAddToCart, onNavigate }: { onAddToCart: (p: Product) => void, onNavigate: (id: string) => void }) => {
   return (
     <div className="pt-20">
@@ -400,6 +478,9 @@ const HomePage = ({ onAddToCart, onNavigate }: { onAddToCart: (p: Product) => vo
         </div>
       </section>
 
+      {/* Brands */}
+      <BrandsStrip onNavigate={onNavigate} />
+
       {/* Best Sellers */}
       <section className="py-24 max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-end mb-12">
@@ -476,28 +557,57 @@ const HomePage = ({ onAddToCart, onNavigate }: { onAddToCart: (p: Product) => vo
   );
 };
 
-const ShopPage = ({ category, onAddToCart, onNavigate }: { category?: string, onAddToCart: (p: Product) => void, onNavigate: (id: string) => void }) => {
-  const filteredProducts = category ? PRODUCTS.filter(p => p.category === category) : PRODUCTS;
-  
+const ShopPage = ({ category, brand, onAddToCart, onNavigate }: { category?: string, brand?: string, onAddToCart: (p: Product) => void, onNavigate: (id: string) => void }) => {
+  const activeBrand = brand ? BRANDS.find(b => b.id === brand) : undefined;
+  const filteredProducts = PRODUCTS.filter(p =>
+    (!category || p.category === category) && (!brand || p.brand === brand)
+  );
+
   return (
     <div className="pt-32 pb-24 max-w-7xl mx-auto px-4">
       <div className="mb-12">
         <h1 className="text-6xl font-display italic mb-4">
-          {category ? category.replace('-', ' ') : 'The Arsenal'}
+          {activeBrand ? activeBrand.name : category ? category.replace('-', ' ') : 'The Arsenal'}
         </h1>
+        {activeBrand && (
+          <p className="text-gray-400 uppercase text-xs font-bold tracking-[0.2em] mb-6">{activeBrand.tagline}</p>
+        )}
         <div className="flex flex-wrap gap-4">
           <button onClick={() => onNavigate('shop')} className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-colors ${!category ? 'bg-neon-green text-black' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}>All Gear</button>
           <button onClick={() => onNavigate('category:steroids')} className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-colors ${category === 'steroids' ? 'bg-neon-green text-black' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}>Steroids</button>
           <button onClick={() => onNavigate('category:protein')} className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-colors ${category === 'protein' ? 'bg-neon-green text-black' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}>Protein</button>
           <button onClick={() => onNavigate('category:fat-burners')} className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-colors ${category === 'fat-burners' ? 'bg-neon-green text-black' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}>Fat Burners</button>
         </div>
+
+        <div className="flex gap-5 overflow-x-auto mt-8 pb-2 no-scrollbar">
+          {BRANDS.map(b => (
+            <button
+              key={b.id}
+              onClick={() => onNavigate(brand === b.id ? 'shop' : `brand:${b.id}`)}
+              className="shrink-0"
+              aria-label={`Filter by ${b.name}`}
+            >
+              <span className={`w-16 h-16 rounded-full bg-white flex items-center justify-center p-2 border transition-all ${brand === b.id ? 'border-neon-green neon-glow-green' : 'border-dark-border opacity-90 hover:opacity-100'}`}>
+                {b.logo ? (
+                  <img src={b.logo} alt={b.name} className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+                ) : (
+                  <span className="font-display text-black text-[9px] leading-none tracking-tight text-center">{b.shortName}</span>
+                )}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredProducts.map(product => (
-          <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} onNavigate={onNavigate} />
-        ))}
-      </div>
+      {filteredProducts.length === 0 ? (
+        <p className="text-gray-500 uppercase text-xs font-bold tracking-widest">No gear from this brand yet.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredProducts.map(product => (
+            <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} onNavigate={onNavigate} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -782,6 +892,8 @@ export default function App() {
     if (currentPage === 'home') return <HomePage onAddToCart={addToCart} onNavigate={navigate} />;
     if (currentPage === 'shop') return <ShopPage onAddToCart={addToCart} onNavigate={navigate} />;
     if (currentPage.startsWith('category:')) return <ShopPage category={currentPage.split(':')[1]} onAddToCart={addToCart} onNavigate={navigate} />;
+    if (currentPage === 'brands') return <BrandsPage onNavigate={navigate} />;
+    if (currentPage.startsWith('brand:')) return <ShopPage brand={currentPage.split(':')[1]} onAddToCart={addToCart} onNavigate={navigate} />;
     if (currentPage.startsWith('product:')) return <ProductDetailPage id={currentPage.split(':')[1]} onAddToCart={addToCart} onNavigate={navigate} />;
     if (currentPage === 'checkout') return <CheckoutPage items={cart} onComplete={() => { setCart([]); navigate('success'); }} />;
     if (currentPage === 'success') return <SuccessPage onNavigate={navigate} />;
